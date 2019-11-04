@@ -1,11 +1,21 @@
+const argv = require('minimist')(process.argv.slice(2));
 const net = require('net');
-const runFor = 1000 * 10 ; //seconds
+const fs = require("fs");
+const istream = fs.createReadStream('./computerNetworking.pdf');
+
+if(!argv.port){
+  throw new Error("You need to provide PORT number");
+}
+if(!argv.ip){
+  throw new Error("You need to provide IP number");
+}
+
+
 // This function create and return a net.Socket object to represent TCP client.
 async function getConn(connName){
-
   const option = {
-    host:'localhost',
-    port: 3001
+    host: argv.ip,
+    port: argv.port
   }
 
   const client = net.createConnection(option, function () {
@@ -37,22 +47,25 @@ async function getConn(connName){
 
   return client;
 }
-doTheMagic();
 
-async function doTheMagic() {
-  const nodeClient = await getConn('Node');
-  const start = new Date();
-  let stop = new Date();
-  const inter = await setInterval(()=>{
-    nodeClient.write('Node is more better than java. ');
-    stop = new Date();
-    // console.log(stop - start)
-    if(stop - start > runFor){
-      clearInterval(inter)
-      nodeClient.end()
+
+getConn('Node').then(socket => {
+  istream.on("readable", function () {
+    let data;
+    while (data = this.read()) {
+      for(let i = 0; i< 10; i++){
+        socket.write(data)
+      }
     }
-  }, 0)
-}
+  })
+
+  istream.on("end", function(){
+    socket.end();
+  })
+})
+
+
+
 
 
 
