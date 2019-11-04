@@ -25,7 +25,8 @@ const server = net.createServer(function(client) {
   client.on('data', function (data) {
 
     // Print received client data and length.
-    area.write(`Total Bytes: ${client.bytesRead} Data Len: ${data.length}`)
+    area.write(`Total Bytes: ${client.bytesRead} Packet Bytes: ${Buffer.byteLength(data, 'utf8')}`)
+    // console.log(data)
 
     // Server send data back to client use client net.Socket object.
     // client.end('Server received data : ' + data + ', send back to client data size : ' + client.bytesWritten);
@@ -37,18 +38,6 @@ const server = net.createServer(function(client) {
     const requestSeconds = (end - start) / 1000
     console.log('Client disconnect.');
     console.log(colors.green(`${client.bytesRead / requestSeconds } bytes/seconds`))
-    // server.getConnections(function (err, count) {
-    //
-    //   if(!err)
-    //   {
-    //     // Print current connection count in server console.
-    //     console.log("There are %d connections now. ", count);
-    //   }else
-    //   {
-    //     console.error(JSON.stringify(err));
-    //   }
-    //
-    // });
   });
 
   // When client timeout.
@@ -61,13 +50,10 @@ const server = net.createServer(function(client) {
 server.listen(argv.port, function () {
 
   console.log(colors.green('TCP Server is Booming on Port : ' + server.address().port));
-
   server.on('close', function () {
     console.log(colors.blue('TCP server socket is closed.'));
   });
-
   server.on('error', function (error) {
     console.error(colors.red(JSON.stringify(error)));
   });
-
 });
