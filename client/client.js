@@ -1,7 +1,8 @@
 const argv = require('minimist')(process.argv.slice(2));
 const net = require('net');
 const fs = require("fs");
-const istream = fs.createReadStream('./computerNetworking.pdf');
+const path = require("path");
+const istream = fs.createReadStream(path.join(process.cwd(), 'computerNetworking.pdf'));
 
 if(!argv.port){
   throw new Error("You need to provide PORT number");
@@ -53,7 +54,7 @@ getConn('Node').then(socket => {
   istream.on("readable", function () {
     let data;
     while (data = this.read()) {
-      for(let i = 0; i< 10; i++){
+      for(let i = 0; i< 5000; i++){
         socket.write(data)
       }
     }
