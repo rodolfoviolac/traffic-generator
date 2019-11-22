@@ -4,7 +4,7 @@ const net = require('net');
 const clui = require('clui');
 const LiveArea  = require( 'clui-live');
 const area = new LiveArea.LiveArea();
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+// const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
 
 if(!argv.port){
@@ -17,15 +17,15 @@ const server = net.createServer(function(client) {
   let totals = 0
   let csvData = []
   let pcktId = 0;
-  const csvWriter = createCsvWriter({
-    path: path.join(process.cwd(),`${client.localPort}-out.csv`),
-    header: [
-      {id: 'pckt', title: 'pckt'},
-      {id: 'date', title: 'date'},
-      {id: 'size', title: 'size'},
-      {id: 'port', title: 'port'}
-    ]
-  });
+  // const csvWriter = createCsvWriter({
+  //   path: path.join(process.cwd(),`${client.localPort}-out.csv`),
+  //   header: [
+  //     {id: 'pckt', title: 'pckt'},
+  //     {id: 'date', title: 'date'},
+  //     {id: 'size', title: 'size'},
+  //     {id: 'port', title: 'port'}
+  //   ]
+  // });
 
   console.log('Client connect. Client local address : ' + client.localAddress + ':' + client.localPort + '. client remote address : ' + client.remoteAddress + ':' + client.remotePort);
   client.setEncoding('utf-8');
@@ -59,9 +59,9 @@ const server = net.createServer(function(client) {
     const requestSeconds = (end - start) / 1000
     console.log('Client disconnect.');
     console.log(colors.green(`${ formatBytes(client.bytesRead, 2)}`))
-    csvWriter
-      .writeRecords(csvData)
-      .then(()=> console.log('The CSV file was written successfully'));
+    // csvWriter
+    //   .writeRecords(csvData)
+    //   .then(()=> console.log('The CSV file was written successfully'));
   });
 
   // When client timeout.
